@@ -44,16 +44,15 @@ body{
 }
 button{ font-family:inherit; }
 :focus-visible{ outline:2px solid var(--caramel); outline-offset:2px; }
- 
+
 #app{
   display:flex;
   height:100dvh;
-  /* max-width:1180px;
-  margin:0 auto; */
+  margin:0 auto;
   background:var(--cream-page);
   overflow:hidden;
 }
- 
+
 /* ---------------- Sidebar ---------------- */
 .sidebar{
   flex:0 0 76px;
@@ -103,7 +102,7 @@ button{ font-family:inherit; }
 .sidebar .bottom{
   display:flex; flex-direction:column; gap:8px;
 }
- 
+
 /* ---------------- Workspace ---------------- */
 .workspace{
   flex:1 1 auto;
@@ -140,10 +139,10 @@ button{ font-family:inherit; }
 }
 .status-pill .dot{ width:7px; height:7px; border-radius:50%; background:var(--green); }
 .status-pill.offline .dot{ background:var(--amber); }
- 
+
 .view{ display:none; flex:1 1 auto; min-height:0; }
 .view.active{ display:flex; }
- 
+
 /* ---------------- Order Entry view ---------------- */
 #view-order{ flex-direction:row; gap:0; }
 .order-main{
@@ -220,7 +219,7 @@ button{ font-family:inherit; }
   cursor:pointer; flex:0 0 auto;
 }
 .product-card .addbtn svg{ width:13px; height:13px; }
- 
+
 /* ---------------- Order / Summary side panel ---------------- */
 .side-panel{
   flex:0 0 300px;
@@ -269,11 +268,11 @@ button{ font-family:inherit; }
   padding:2px; display:flex;
 }
 .ci-remove svg{ width:13px; height:13px; }
- 
+
 .totals{ display:flex; flex-direction:column; gap:6px; padding-top:8px; border-top:1px solid var(--border); margin-bottom:14px; }
 .totals .trow{ display:flex; justify-content:space-between; font-size:12px; color:var(--muted); }
 .totals .trow.grand{ font-size:16px; font-weight:700; color:var(--text); padding-top:4px; }
- 
+
 .btn{
   border:none; border-radius:12px; padding:13px 18px;
   font-size:13px; font-weight:700; letter-spacing:.01em;
@@ -288,7 +287,7 @@ button{ font-family:inherit; }
 .btn-ghost:hover{ background:var(--white); }
 .btn-block{ width:100%; }
 .btn-row{ display:flex; gap:10px; }
- 
+
 /* ---------------- Checkout view ---------------- */
 #view-checkout{ flex-direction:row; gap:0; }
 .checkout-main{ flex:1 1 auto; overflow-y:auto; padding:0 16px 24px 26px; min-width:0; }
@@ -319,7 +318,7 @@ button{ font-family:inherit; }
 .recap-list{ display:flex; flex-direction:column; gap:8px; }
 .recap-row{ display:flex; justify-content:space-between; font-size:13px; padding:8px 0; border-bottom:1px dashed var(--border); }
 .recap-row .rq{ color:var(--muted); margin-right:6px; }
- 
+
 .summary-panel{
   flex:0 0 300px;
   background:var(--card); border-left:1px solid var(--border);
@@ -335,7 +334,7 @@ button{ font-family:inherit; }
 .summary-total .label{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-top:4px; }
 .summary-mini{ flex:1 1 auto; overflow-y:auto; display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
 .summary-mini .srow{ display:flex; justify-content:space-between; font-size:12px; color:var(--muted); }
- 
+
 /* ---------------- Customer view ---------------- */
 #view-customer{ padding:6px 26px 24px; overflow-y:auto; }
 .customer-grid{ display:grid; grid-template-columns:1.1fr 1fr; gap:16px; align-items:start; }
@@ -385,7 +384,7 @@ button{ font-family:inherit; }
   font-size:11px; color:var(--muted); line-height:1.6; margin-top:14px;
   padding-top:14px; border-top:1px solid var(--border);
 }
- 
+
 /* ---------------- Queue view ---------------- */
 #view-queue{ padding:6px 26px 24px; overflow-y:auto; flex-direction:column; }
 .queue-board{ display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; }
@@ -417,7 +416,7 @@ button{ font-family:inherit; }
 .qcard.ready .qaction{ background:var(--green-lt); color:var(--green); }
 .qcard.ready .qaction:hover{ background:var(--espresso); color:#fff; }
 .queue-empty{ font-size:12px; color:var(--muted); text-align:center; padding:24px 10px; line-height:1.6; }
- 
+
 /* ---------------- Toast ---------------- */
 .toast{
   position:fixed; left:50%; bottom:22px; transform:translate(-50%, 140%);
@@ -428,7 +427,9 @@ button{ font-family:inherit; }
 }
 .toast svg{ width:14px; height:14px; }
 .toast.show{ transform:translate(-50%,0); }
- 
+.toast.online{ background:var(--green); }
+.toast.offline{ background:var(--amber); }
+
 /* ---------------- Responsive ---------------- */
 @media (max-width: 900px){
   #app{ max-width:100%; }
@@ -446,7 +447,7 @@ button{ font-family:inherit; }
 </head>
 <body>
 <div id="app">
- 
+
   <aside class="sidebar">
     <div class="logo">
       <svg viewBox="0 0 24 24" fill="none"><path d="M4 9h13a1 1 0 0 1 1 1v2a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z" stroke="#271310" stroke-width="1.6" stroke-linejoin="round"/><path d="M18 10h1.5a2 2 0 0 1 0 4H18" stroke="#271310" stroke-width="1.6"/><path d="M7 5.5c0-.7.6-1 1-1.6M11 5.5c0-.7.6-1 1-1.6" stroke="#271310" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -475,7 +476,7 @@ button{ font-family:inherit; }
       </button>
     </div>
   </aside>
- 
+
   <div class="workspace">
     <div class="topbar">
       <div class="titles">
@@ -484,7 +485,7 @@ button{ font-family:inherit; }
       </div>
       <div class="status-pill" id="statusPill"><span class="dot"></span><span id="statusText">Offline ready</span></div>
     </div>
- 
+
     <!-- ============ VIEW: ORDER ENTRY ============ -->
     <section class="view active" id="view-order">
       <div class="order-main">
@@ -508,16 +509,16 @@ button{ font-family:inherit; }
         </button>
       </aside>
     </section>
- 
+
     <!-- ============ VIEW: CHECKOUT ============ -->
     <section class="view" id="view-checkout">
       <div class="checkout-main">
         <div class="section-label">Payment method</div>
         <div class="pay-methods" id="payMethods"></div>
- 
+
         <div class="section-label">Add a tip</div>
         <div class="tip-row" id="tipRow"></div>
- 
+
         <div class="section-label">Order</div>
         <div class="recap-list" id="checkoutRecap"></div>
       </div>
@@ -537,7 +538,7 @@ button{ font-family:inherit; }
         </div>
       </aside>
     </section>
- 
+
     <!-- ============ VIEW: CUSTOMER ============ -->
     <section class="view" id="view-customer">
       <div class="customer-grid">
@@ -563,7 +564,7 @@ button{ font-family:inherit; }
         </button>
       </div>
     </section>
- 
+
     <!-- ============ VIEW: QUEUE ============ -->
     <section class="view" id="view-queue">
       <div class="queue-board">
@@ -579,13 +580,13 @@ button{ font-family:inherit; }
     </section>
   </div>
 </div>
- 
+
 <div class="toast" id="toast"></div>
- 
+
 <script>
 (function(){
   "use strict";
- 
+
   /* ---------- icons ---------- */
   var ICON = {
     cupHot: '<svg viewBox="0 0 24 24" fill="none"><path d="M5 8h11a1 1 0 0 1 1 1v3a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M17 9.5h1.3a1.8 1.8 0 0 1 0 3.6H17" stroke="currentColor" stroke-width="1.6"/><path d="M8 5c0-.6.5-.9.9-1.4M12 5c0-.6.5-.9.9-1.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
@@ -601,9 +602,11 @@ button{ font-family:inherit; }
     card: '<svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5.5" width="19" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 9.5h19" stroke="currentColor" stroke-width="1.6"/></svg>',
     gift: '<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="9" width="18" height="4" rx="1" stroke="currentColor" stroke-width="1.6"/><path d="M5 13h14v7a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7Z" stroke="currentColor" stroke-width="1.6"/><path d="M12 9v12M12 9c-1.5 0-4-.8-4-3a2 2 0 0 1 4 0 2 2 0 0 1 4 0c0 2.2-2.5 3-4 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
     back: '<svg viewBox="0 0 24 24" fill="none"><path d="M14 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    check: '<svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    check: '<svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    wifi: '<svg viewBox="0 0 24 24" fill="none"><path d="M2.5 9.5a15 15 0 0 1 19 0" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M5.8 13.2a10.5 10.5 0 0 1 12.4 0" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M9.2 16.8a5.8 5.8 0 0 1 5.6 0" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="12" cy="19.3" r="1.1" fill="currentColor"/></svg>',
+    wifiOff: '<svg viewBox="0 0 24 24" fill="none"><path d="M2.5 9.5c1.9-1.5 4-2.5 6.2-3M21.5 9.5a15 15 0 0 0-4.7-2.7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M5.8 13.2a10.5 10.5 0 0 1 5-2.5M18.2 13.2a10.5 10.5 0 0 0-2.6-1.7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M9.2 16.8a5.8 5.8 0 0 1 5.6 0" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="12" cy="19.3" r="1.1" fill="currentColor"/><path d="M2 2l20 20" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>'
   };
- 
+
   /* ---------- menu data ---------- */
   var MENU = [
     {id:'esp',  cat:'Beverages', name:'Espresso',        price:3.25, icon:'cupHot'},
@@ -629,7 +632,7 @@ button{ font-family:inherit; }
   var CATEGORIES = ['Beverages','Food','Bakery','Merch'];
   var TAX_RATE = 0.08;
   var TIP_OPTIONS = [0, 10, 15, 20];
- 
+
   /* ---------- state ---------- */
   var state = {
     view: 'order',
@@ -643,7 +646,7 @@ button{ font-family:inherit; }
     queue: loadQueue(),
     orderSeq: loadSeq()
   };
- 
+
   function loadQueue(){
     try{ return JSON.parse(localStorage.getItem('becafe:queue')) || []; }catch(e){ return []; }
   }
@@ -653,10 +656,10 @@ button{ font-family:inherit; }
     return isNaN(v) ? 1024 : v;
   }
   function saveSeq(){ localStorage.setItem('becafe:seq', String(state.orderSeq)); }
- 
+
   function money(n){ return '$' + n.toFixed(2); }
   function menuItem(id){ return MENU.find(function(m){ return m.id === id; }); }
- 
+
   function cartLines(){
     return Object.keys(state.cart).filter(function(id){ return state.cart[id] > 0; })
       .map(function(id){ var m = menuItem(id); return {item:m, qty:state.cart[id]}; });
@@ -671,7 +674,7 @@ button{ font-family:inherit; }
   }
   function grandTotal(){ return subtotal() + tax() + tipAmount(); }
   function cartCount(){ return cartLines().reduce(function(s,l){ return s+l.qty; },0); }
- 
+
   /* ---------- navigation ---------- */
   var VIEW_META = {
     order:    {title:'Order Entry',    sub:'becafe · Main counter'},
@@ -694,7 +697,7 @@ button{ font-family:inherit; }
   document.querySelectorAll('.navbtn[data-view]').forEach(function(b){
     b.addEventListener('click', function(){ goTo(b.getAttribute('data-view')); });
   });
- 
+
   /* ---------- render: category tabs ---------- */
   function renderTabs(){
     var el = document.getElementById('categoryTabs');
@@ -708,7 +711,7 @@ button{ font-family:inherit; }
       });
     });
   }
- 
+
   /* ---------- render: product grid ---------- */
   function renderGrid(){
     var el = document.getElementById('productGrid');
@@ -736,7 +739,7 @@ button{ font-family:inherit; }
       });
     });
   }
- 
+
   function addToCart(id){
     state.cart[id] = (state.cart[id] || 0) + 1;
     renderCart();
@@ -746,7 +749,7 @@ button{ font-family:inherit; }
     if(q <= 0){ delete state.cart[id]; } else { state.cart[id] = q; }
     renderCart();
   }
- 
+
   /* ---------- render: cart / order panel ---------- */
   function renderCart(){
     var listEl = document.getElementById('cartList');
@@ -780,13 +783,13 @@ button{ font-family:inherit; }
     document.getElementById('toCheckoutBtn').disabled = lines.length === 0;
     document.getElementById('orderIdLabel').textContent = '#'+state.orderSeq+' · New order';
   }
- 
+
   document.getElementById('toCheckoutBtn').addEventListener('click', function(){
     if(cartLines().length === 0) return;
     renderCheckout();
     goTo('checkout');
   });
- 
+
   /* ---------- render: checkout ---------- */
   var PAY_OPTIONS = [
     {id:'cash', label:'Cash', icon:'cash'},
@@ -854,7 +857,7 @@ button{ font-family:inherit; }
     renderCustomerView();
     goTo('customer');
   });
- 
+
   /* ---------- render: customer view ---------- */
   function renderPhoneDisplay(){
     var el = document.getElementById('phoneDisplay');
@@ -920,7 +923,7 @@ button{ font-family:inherit; }
       : 'Guest';
     completeOrder(label);
   });
- 
+
   function completeOrder(customerLabel){
     if(cartLines().length === 0){ goTo('order'); return; }
     var order = {
@@ -936,7 +939,7 @@ button{ font-family:inherit; }
     saveQueue();
     state.orderSeq += 1;
     saveSeq();
- 
+
     // reset for next customer
     state.cart = {};
     state.paymentMethod = null;
@@ -944,12 +947,12 @@ button{ font-family:inherit; }
     state.phone = '';
     state.prefs = { receipt:true, sms:false, loyalty:false, marketing:false };
     renderCart();
- 
+
     showToast('Order #'+order.id+' sent to the queue');
     renderQueue();
     goTo('queue');
   }
- 
+
   /* ---------- render: queue ---------- */
   function timeAgo(ts){
     var mins = Math.floor((Date.now()-ts)/60000);
@@ -963,10 +966,10 @@ button{ font-family:inherit; }
   function renderQueue(){
     var prep = state.queue.filter(function(o){ return o.status === 'preparing'; });
     var ready = state.queue.filter(function(o){ return o.status === 'ready'; });
- 
+
     document.getElementById('prepCount').textContent = prep.length;
     document.getElementById('readyCount').textContent = ready.length;
- 
+
     var prepEl = document.getElementById('prepList');
     prepEl.innerHTML = prep.length ? prep.map(function(o){
       return '<div class="qcard prep" data-id="'+o.id+'">'+
@@ -975,7 +978,7 @@ button{ font-family:inherit; }
         '<div class="qfoot"><span class="qtime">'+timeAgo(o.createdAt)+'</span>'+
         '<button class="qaction" data-action="ready">Mark ready →</button></div></div>';
     }).join('') : '<div class="queue-empty">Nothing in preparation right now.</div>';
- 
+
     var readyEl = document.getElementById('readyList');
     readyEl.innerHTML = ready.length ? ready.map(function(o){
       return '<div class="qcard ready" data-id="'+o.id+'">'+
@@ -984,7 +987,7 @@ button{ font-family:inherit; }
         '<div class="qfoot"><span class="qtime">'+timeAgo(o.createdAt)+'</span>'+
         '<button class="qaction" data-action="collected">Mark collected</button></div></div>';
     }).join('') : '<div class="queue-empty">No orders ready for collection.</div>';
- 
+
     prepEl.querySelectorAll('.qaction').forEach(function(btn){
       btn.addEventListener('click', function(){
         var id = parseInt(btn.closest('.qcard').getAttribute('data-id'),10);
@@ -1008,40 +1011,47 @@ button{ font-family:inherit; }
     if(active > 0){ b.hidden = false; b.textContent = active > 9 ? '9+' : String(active); }
     else { b.hidden = true; }
   }
- 
+
   /* ---------- search ---------- */
   document.getElementById('searchInput').addEventListener('input', function(e){
     state.search = e.target.value;
     renderGrid();
   });
- 
+
   /* ---------- toast ---------- */
-  function showToast(msg){
+  function showToast(msg, variant){
     var t = document.getElementById('toast');
-    t.innerHTML = ICON.check + '<span>'+msg+'</span>';
-    t.classList.add('show');
+    var icon = variant === 'offline' ? ICON.wifiOff : variant === 'online' ? ICON.wifi : ICON.check;
+    t.className = 'toast show' + (variant ? ' ' + variant : '');
+    t.innerHTML = icon + '<span>'+msg+'</span>';
     clearTimeout(showToast._h);
-    showToast._h = setTimeout(function(){ t.classList.remove('show'); }, 2200);
+    showToast._h = setTimeout(function(){ t.classList.remove('show'); }, variant ? 3600 : 2200);
   }
- 
+
   /* ---------- online/offline status ---------- */
-  function updateStatus(){
+  function updateStatus(announce){
     var online = navigator.onLine;
     var pill = document.getElementById('statusPill');
     pill.classList.toggle('offline', !online);
-    document.getElementById('statusText').textContent = online ? 'Offline ready' : 'Offline — orders saved locally';
+    document.getElementById('statusText').textContent = online ? 'Online' : 'Offline — saving locally';
+    if(announce){
+      showToast(
+        online ? "You're back online" : "You're offline — orders are still saved on this device",
+        online ? 'online' : 'offline'
+      );
+    }
   }
-  window.addEventListener('online', updateStatus);
-  window.addEventListener('offline', updateStatus);
- 
+  window.addEventListener('online', function(){ updateStatus(true); });
+  window.addEventListener('offline', function(){ updateStatus(true); });
+
   /* ---------- init ---------- */
   renderTabs();
   renderGrid();
   renderCart();
   renderQueue();
-  updateStatus();
+  updateStatus(false);
   setInterval(function(){ if(state.view==='queue') renderQueue(); }, 30000);
- 
+
   if('serviceWorker' in navigator){
     window.addEventListener('load', function(){
       navigator.serviceWorker.register('sw.js').catch(function(err){
@@ -1053,4 +1063,3 @@ button{ font-family:inherit; }
 </script>
 </body>
 </html>
- 
