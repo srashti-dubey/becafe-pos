@@ -48,6 +48,7 @@ button{ font-family:inherit; }
 #app{
   display:flex;
   height:100dvh;
+  max-width:1180px;
   margin:0 auto;
   background:var(--cream-page);
   overflow:hidden;
@@ -634,18 +635,24 @@ button{ font-family:inherit; }
   var TIP_OPTIONS = [0, 10, 15, 20];
 
   /* ---------- state ---------- */
+  var draft = loadDraft();
   var state = {
-    view: 'order',
+    view: draft.view || 'order',
     category: 'Beverages',
     search: '',
-    cart: {},              // id -> qty
-    paymentMethod: null,
-    tipPercent: null,
-    phone: '',
-    prefs: { receipt:true, sms:false, loyalty:false, marketing:false },
+    cart: draft.cart || {},              // id -> qty
+    paymentMethod: draft.paymentMethod || null,
+    tipPercent: (typeof draft.tipPercent === 'number') ? draft.tipPercent : null,
+    phone: draft.phone || '',
+    prefs: draft.prefs || { receipt:true, sms:false, loyalty:false, marketing:false },
     queue: loadQueue(),
     orderSeq: loadSeq()
   };
+  // If there's nothing in the cart, an in-progress checkout/customer screen
+  // wouldn't make sense to restore into — fall back to Order Entry.
+  if(Object.keys(state.cart).length === 0 && state.view !== 'order' && state.view !== 'queue'){
+    state.view = 'order';
+  }
 
   function loadQueue(){
     try{ return JSON.parse(localStorage.getItem('becafe:queue')) || []; }catch(e){ return []; }
@@ -656,6 +663,24 @@ button{ font-family:inherit; }
     return isNaN(v) ? 1024 : v;
   }
   function saveSeq(){ localStorage.setItem('becafe:seq', String(state.orderSeq)); }
+
+  // The current in-progress order (cart + checkout choices + which screen
+  // you're on) is saved after every change, so a refresh — online or
+  // offline — resumes exactly where you left off instead of losing it.
+  function loadDraft(){
+    try{ return JSON.parse(localStorage.getItem('becafe:draft')) || {}; }catch(e){ return {}; }
+  }
+  function saveDraft(){
+    localStorage.setItem('becafe:draft', JSON.stringify({
+      view: state.view,
+      cart: state.cart,
+      paymentMethod: state.paymentMethod,
+      tipPercent: state.tipPercent,
+      phone: state.phone,
+      prefs: state.prefs
+    }));
+  }
+  function clearDraft(){ localStorage.removeItem('becafe:draft'); }
 
   function money(n){ return '$' + n.toFixed(2); }
   function menuItem(id){ return MENU.find(function(m){ return m.id === id; }); }
@@ -693,6 +718,7 @@ button{ font-family:inherit; }
     document.getElementById('viewSub').textContent = VIEW_META[view].sub;
     if(view === 'queue') renderQueue();
     window.scrollTo(0,0);
+    saveDraft();
   }
   document.querySelectorAll('.navbtn[data-view]').forEach(function(b){
     b.addEventListener('click', function(){ goTo(b.getAttribute('data-view')); });
@@ -743,11 +769,13 @@ button{ font-family:inherit; }
   function addToCart(id){
     state.cart[id] = (state.cart[id] || 0) + 1;
     renderCart();
+    saveDraft();
   }
   function changeQty(id, delta){
     var q = (state.cart[id] || 0) + delta;
     if(q <= 0){ delete state.cart[id]; } else { state.cart[id] = q; }
     renderCart();
+    saveDraft();
   }
 
   /* ---------- render: cart / order panel ---------- */
@@ -773,7 +801,7 @@ button{ font-family:inherit; }
         var id = row.getAttribute('data-id');
         row.querySelector('.qplus').addEventListener('click', function(){ changeQty(id, 1); });
         row.querySelector('.qminus').addEventListener('click', function(){ changeQty(id, -1); });
-        row.querySelector('.ci-remove').addEventListener('click', function(){ delete state.cart[id]; renderCart(); });
+        row.querySelector('.ci-remove').addEventListener('click', function(){ delete state.cart[id]; renderCart(); saveDraft(); });
       });
     }
     document.getElementById('orderTotals').innerHTML =
@@ -806,6 +834,7 @@ button{ font-family:inherit; }
         state.paymentMethod = b.getAttribute('data-id');
         renderPayMethods();
         updateForwardState();
+        saveDraft();
       });
     });
   }
@@ -818,6 +847,7 @@ button{ font-family:inherit; }
       b.addEventListener('click', function(){
         state.tipPercent = parseInt(b.getAttribute('data-t'),10);
         renderTipRow(); renderCheckoutTotals();
+        saveDraft();
       });
     });
     document.getElementById('tipCustom').addEventListener('click', function(){
@@ -826,6 +856,7 @@ button{ font-family:inherit; }
       var n = Math.max(0, Math.min(100, parseInt(v,10) || 0));
       state.tipPercent = n;
       renderTipRow(); renderCheckoutTotals();
+      saveDraft();
     });
   }
   function renderCheckoutRecap(){
@@ -886,6 +917,7 @@ button{ font-family:inherit; }
         else if(k === 'back'){ state.phone = state.phone.slice(0,-1); }
         else if(state.phone.length < 10){ state.phone += k; }
         renderPhoneDisplay();
+        saveDraft();
       });
     });
   }
@@ -904,6 +936,7 @@ button{ font-family:inherit; }
     el.querySelectorAll('input[type=checkbox]').forEach(function(cb){
       cb.addEventListener('change', function(){
         state.prefs[cb.getAttribute('data-t')] = cb.checked;
+        saveDraft();
       });
     });
   }
@@ -947,6 +980,7 @@ button{ font-family:inherit; }
     state.phone = '';
     state.prefs = { receipt:true, sms:false, loyalty:false, marketing:false };
     renderCart();
+    clearDraft();
 
     showToast('Order #'+order.id+' sent to the queue');
     renderQueue();
@@ -1051,6 +1085,14 @@ button{ font-family:inherit; }
   renderQueue();
   updateStatus(false);
   setInterval(function(){ if(state.view==='queue') renderQueue(); }, 30000);
+
+  // Resume on whichever screen was active before the refresh, with that
+  // screen's own contents (payment choice, tip, phone, toggles) rebuilt
+  // from the restored state rather than starting blank.
+  var resumeView = state.view;
+  if(resumeView === 'checkout') renderCheckout();
+  if(resumeView === 'customer') renderCustomerView();
+  goTo(resumeView);
 
   if('serviceWorker' in navigator){
     window.addEventListener('load', function(){
