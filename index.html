@@ -1062,8 +1062,38 @@ button{ font-family:inherit; }
   }
 
   /* ---------- online/offline status ---------- */
-  function updateStatus(announce){
-    var online = navigator.onLine;
+  // navigator.onLine is unreliable — it only reflects whether the network
+  // adapter is connected, not whether the internet is actually reachable,
+  // and it can be stale right after a page reload. So instead we actively
+  // probe by requesting a tiny file with cache disabled and a short
+  // timeout, and treat that as the source of truth.
+  var lastKnownOnline = null; // unknown until the first probe resolves
+
+  function probeConnectivity(){
+    return new Promise(function(resolve){
+      if(navigator.onLine === false){
+        // The browser is confident there's no network at all — trust that
+        // immediately rather than waiting on a fetch that will just fail.
+        resolve(false);
+        return;
+      }
+      var controller = new AbortController();
+      var timer = setTimeout(function(){ controller.abort(); }, 3500);
+      fetch('./manifest.json?probe=' + Date.now(), {
+        method: 'HEAD',
+        cache: 'no-store',
+        signal: controller.signal
+      }).then(function(res){
+        clearTimeout(timer);
+        resolve(res.ok);
+      }).catch(function(){
+        clearTimeout(timer);
+        resolve(false);
+      });
+    });
+  }
+
+  function applyStatus(online, announce){
     var pill = document.getElementById('statusPill');
     pill.classList.toggle('offline', !online);
     document.getElementById('statusText').textContent = online ? 'Online' : 'Offline — saving locally';
@@ -1074,15 +1104,27 @@ button{ font-family:inherit; }
       );
     }
   }
-  window.addEventListener('online', function(){ updateStatus(true); });
-  window.addEventListener('offline', function(){ updateStatus(true); });
+
+  function refreshStatus(){
+    probeConnectivity().then(function(online){
+      var changed = lastKnownOnline !== null && lastKnownOnline !== online;
+      lastKnownOnline = online;
+      applyStatus(online, changed);
+    });
+  }
+
+  window.addEventListener('online', refreshStatus);
+  window.addEventListener('offline', refreshStatus);
+  // Events alone aren't fully reliable either (a dead wifi router with no
+  // internet won't fire 'offline' at all), so also poll periodically.
+  setInterval(refreshStatus, 12000);
 
   /* ---------- init ---------- */
   renderTabs();
   renderGrid();
   renderCart();
   renderQueue();
-  updateStatus(false);
+  refreshStatus();
   setInterval(function(){ if(state.view==='queue') renderQueue(); }, 30000);
 
   // Resume on whichever screen was active before the refresh, with that
